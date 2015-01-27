@@ -154,7 +154,7 @@ class XLSXWriter
 		if (empty($sheet_name) || empty($header_types) || !empty($this->sheets[$sheet_name]))
 			return;
 
-		self::initializeSheet($sheet_name);
+		self::initializeSheet($sheet_name,$array_width);
 		$sheet = &$this->sheets[$sheet_name];
 		$sheet->cell_formats = array_values($header_types);
 		$header_row = array_keys($header_types);
