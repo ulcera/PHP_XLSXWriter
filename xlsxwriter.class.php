@@ -96,12 +96,12 @@ class XLSXWriter
 		$zip->close();
 	}
 
-	protected function initializeSheet($sheet_name)
+	protected function initializeSheet($sheet_name, $col_large=array() )
 	{
 		//if already initialized
 		if ($this->current_sheet==$sheet_name || isset($this->sheets[$sheet_name]))
 			return;
-
+			
 		$sheet_filename = $this->tempFilename();
 		$sheet_xmlname = 'sheet' . (count($this->sheets) + 1).".xml";
 		$this->sheets[$sheet_name] = (object)array(
@@ -132,12 +132,24 @@ class XLSXWriter
 		$sheet->file_writer->write(    '</sheetView>');
 		$sheet->file_writer->write(  '</sheetViews>');
 		$sheet->file_writer->write(  '<cols>');
-		$sheet->file_writer->write(    '<col collapsed="false" hidden="false" max="1025" min="1" style="0" width="11.5"/>');
+		if(sizeof($col_large)!=0)
+		{
+			for($i=0; $i < sizeof($col_large) ; $i++)
+			{
+				$sheet->file_writer->write('<col collapsed="false" hidden="false" max="'.($i+2).'" min="'.($i+1).'" style="0" width="'.$col_large[$i].'" ></col>');
+			}
+			$sheet->file_writer->write('<col collapsed="false" hidden="false" max="1025" min="'.(sizeof($col_large)+3).'" style="0" width="11.5" ></col>');
+		}
+		else
+		{
+			$sheet->file_writer->write('<col collapsed="false" hidden="false" max="1025" min="1" style="0" width="11.5" ></col>');
+		}
+		
 		$sheet->file_writer->write(  '</cols>');
 		$sheet->file_writer->write(  '<sheetData>');
 	}
 
-	public function writeSheetHeader($sheet_name, array $header_types)
+	public function writeSheetHeader($sheet_name, array $header_types, $array_width)
 	{
 		if (empty($sheet_name) || empty($header_types) || !empty($this->sheets[$sheet_name]))
 			return;
