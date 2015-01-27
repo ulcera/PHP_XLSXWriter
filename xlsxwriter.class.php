@@ -149,7 +149,7 @@ class XLSXWriter
 		$sheet->file_writer->write(  '<sheetData>');
 	}
 
-	public function writeSheetHeader($sheet_name, array $header_types, $array_width)
+	public function writeSheetHeader($sheet_name, array $header_types, $array_width=array())
 	{
 		if (empty($sheet_name) || empty($header_types) || !empty($this->sheets[$sheet_name]))
 			return;
